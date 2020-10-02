@@ -1,0 +1,113 @@
+{
+    "questions": [
+      {
+        "options": {
+          "field": "We care for you!! Please enter your Health Information in form below.",
+          "key": 1
+        },
+        "type": "Typographys"
+      },
+      {
+        "options": {
+          "field": "Temperature",
+          "key": 2,
+          "name": "temperature",
+          "radioOption": [
+            "Normal",
+            "High",
+            "Severe"
+          ],
+          "required": true
+        },
+        "type": "RadioSelect"
+      },
+      {
+        "options": {
+          "field": "Spo2 %",
+          "key": 3,
+          "name": "spo2",
+          "radioOption": [
+            "> 93",
+            "90 to 93",
+            "< 90"
+          ],
+          "required": true
+        },
+        "type": "RadioSelect"
+      },
+      {
+        "options": {
+          "field": "Have you traveled to any country in the last 14 days?",
+          "key": 4,
+          "name": "travelHistory",
+          "radioOption": [
+            "Yes",
+            "No"
+          ],
+          "required": true
+        },
+        "type": "RadioSelect"
+      },
+      {
+        "options": {
+          "field": "Have you come in contact with any potentially infected person in the last 14 days?",
+          "key": 5,
+          "name": "positiveContact",
+          "radioOption": [
+            "Yes",
+            "No"
+          ],
+          "required": true
+        },
+        "type": "RadioSelect"
+      },
+      {
+        "options": {
+          "field": "Symptoms (Select one or more)",
+          "key": 6,
+          "name": "symptoms",
+          "required": true,
+          "selectOption": [
+            "Dry Cough",
+            "Sore Throat",
+            "Shortness of Breath",
+            "Chest Pain/ pressure",
+            "Confusion/ problems thinking",
+            "Bluish lips/ face",
+            "Fatigue",
+            "Aches and Pain",
+            "Headache",
+            "Stuffy/ runny Nose",
+            "Sneezing",
+            "Loss of appetite/ smell",
+            "Vomiting",
+            "Diarrhea"
+          ]
+        },
+        "type": "RequestReason"
+      },
+      {
+        "options": {
+          "field": "Overall Health Status",
+          "key": 7,
+          "name": "overallHealthStatus",
+          "radioOption": [
+            "No Change",
+            "Improved",
+            "Declined"
+          ],
+          "required": true
+        },
+        "type": "RadioSelect"
+      },
+      {
+        "options": {
+          "field": "Submit",
+          "key": 8,
+          "type": "submit"
+        },
+        "type": "SubmitButton"
+      }
+    ],
+    "title": "Health & Wellness Reporting"
+  }

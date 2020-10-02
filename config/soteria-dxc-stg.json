@@ -1,0 +1,22 @@
+{
+    "Parameters": {
+        "AcmCertificateArn": "arn:aws:acm:us-east-1:123456789012:certificate/30129442-74cb-4a2f-b5a3-c98561ed3c87",
+        "HostedZoneName": "example.com",
+        "Webalias": "dashboard-cft-xxx.example.com",
+        "ApiDomainName": "api-dashboards-cft-xxx.example.com",
+        "HostedZoneId": "xxx",
+ "UserDomainName": "example.com",
+        "AdminDomainName": "example.org"
+    },
+    "Tags": {
+    },
+    "StackPolicy": {
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": "*",
+                "Resource": "*"
+            }
+        ]
+    }
+}

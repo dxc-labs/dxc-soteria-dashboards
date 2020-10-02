@@ -1,0 +1,15 @@
+{
+  "name": "soteria-cognito-listgroupforuser",
+  "version": "1.0.0",
+  "description": "List all the cognito groups for an user",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cryptr": "^6.0.1",
+    "uuid": "^7.0.1"
+  }
+}

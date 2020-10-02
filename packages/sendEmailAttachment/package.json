@@ -1,0 +1,14 @@
+{
+    "name": "soteria-ses-send-attachment",
+    "version": "1.0.0",
+    "description": "Send Email Attachment",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "nodemailer":"^6.4.11"
+    }
+  }

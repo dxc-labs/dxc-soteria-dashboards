@@ -1,0 +1,555 @@
+---
+    #
+    # Template usage:
+    #   This template depends on the following stacks.
+    #   * Database
+    #   * Authentication
+    
+    AWSTemplateFormatVersion: 2010-09-09
+    Description: Dashboards Lambdas
+    Transform: AWS::Serverless-2016-10-31
+    
+    ###########################################################################################
+    ## Parameters:
+    ###########################################################################################
+    
+    Parameters:
+      StackRootName:
+        Type: String
+        Description: Prefix for resources
+        Default: AWS::StackName
+      
+      OpenApiBucket:
+        Type: String
+        Description: Path of the CF bucket name.
+      
+      ApiDomainName:
+        Type: String
+        Description: User Domain Name
+  
+      DocumentBucketName:
+        Type: String
+        Description: Document Bucket Name
+
+      UserPoolId:
+        Type: String
+        Description: Cognito UserPool ID
+
+      CognitoUserPoolArn:
+        Type: String
+        Description: Cognito Pool ARN
+    
+    ###########################################################################################
+    ## Resources:
+    ###########################################################################################
+    
+    Resources:
+      APIGatewayExecutionRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:  
+                  Service:
+                    - apigateway.amazonaws.com
+                    - lambda.amazonaws.com
+                Action: sts:AssumeRole
+          Policies:
+            - PolicyName: ApiGatewayLambdaPolicy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - lambda:InvokeFunction
+                      - lambda:PublishVersion
+                    Resource:
+                      - !GetAtt UpdateS3File.Arn
+                      - !GetAtt LambdaCreateMailTemplate.Arn
+                      - !GetAtt LambdaUpdateMailTemplate.Arn
+                      - !GetAtt LambdaSendTemplateMail.Arn
+                      - !GetAtt LambdaGetMailTemplateData.Arn
+                      - !GetAtt LambdaGetAllMailTemplates.Arn
+                      - !GetAtt LambdaGetGroups.Arn
+                      - !GetAtt LambdaGetUsers.Arn
+                      - !GetAtt LambdaListGroupsForUser.Arn
+                      - !GetAtt LambdaListUsersInGroup.Arn
+                      - !GetAtt LambdaAddUserToGroup.Arn
+                      - !GetAtt LambdaRemoveUserFromGroup.Arn
+                      - !GetAtt LambdaGetUserMetadata.Arn
+                      - !GetAtt LambdaDeleteUser.Arn
+                      - !GetAtt LambdaSendEmailAttachment.Arn
+          ManagedPolicyArns:
+            - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+      # ##############################################
+      # # AWS::Lambda::*
+      # ##############################################
+      
+      UpdateS3File:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-UpdateFile"
+          CodeUri: ./../../packages/UpdateS3FileLambda
+          Environment:
+            Variables:
+              S3_BUCKET: !Ref DocumentBucketName
+          Description: Update file
+          Handler: lambda_function.lambda_handler
+          Runtime: python3.8
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                Resource: !Sub "arn:aws:s3:::${DocumentBucketName}/*"         
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaUpdateMailTemplate:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-UpdateMailTemplate"
+          CodeUri: ./../../packages/updateMailTemplateLambda
+          Description: Update ses template
+          Handler: index.handler
+          Runtime: nodejs10.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:*
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+      
+      LambdaSendEmailAttachment:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-SendEmailAttachment"
+          CodeUri: ./../../packages/sendEmailAttachment
+          Description: Send Attachments in Email
+          Handler: index.handler
+          Runtime: nodejs10.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:*
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaCreateMailTemplate:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-CreateMailTemplate"
+          CodeUri: ./../../packages/createMailTemplateLambda
+          Description: Create ses template
+          Handler: index.handler
+          Runtime: nodejs10.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:*
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaSendTemplateMail:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-SendTemplateMail"
+          CodeUri: ./../../packages/sendTemplateMailLambda
+          Description: Send ses template mail
+          Handler: index.handler
+          Runtime: nodejs10.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:*
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaGetMailTemplateData:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-GetMailTemplateData"
+          CodeUri: ./../../packages/getMailTemplateDataLambda
+          Description: Get ses template mail
+          Handler: index.handler
+          Runtime: nodejs10.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:*
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaGetAllMailTemplates:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-GetAllMailTemplates"
+          CodeUri: ./../../packages/getAllMailTemplatesLambda
+          Description: Get ses template mail
+          Handler: index.handler
+          Runtime: nodejs10.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:*
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+
+      #NEW LAMBDA
+      LambdaGetGroups:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-GetGroups"
+          CodeUri: ./../../packages/getgroups
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: List groups in cognito userpool
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"      
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaGetUsers:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-GetUsers"
+          CodeUri: ./../../packages/getusers
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: List users in cognito userpool
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"        
+          Tags:
+            System: !Ref AWS::StackName
+            
+      LambdaListGroupsForUser:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-ListGroupsForUser"
+          CodeUri: ./../../packages/listgroupforuser
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: Lists groups in cognito userpool
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"          
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaListUsersInGroup:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-ListUsersInGroup"
+          CodeUri: ./../../packages/listusersingroup
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: List users in cognito userpool group
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"        
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaAddUserToGroup:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-AddUserToGroup"
+          CodeUri: ./../../packages/addusertogroup
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: Add a user to a cognito userpool group
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"        
+          Tags:
+            System: !Ref AWS::StackName
+      
+      LambdaRemoveUserFromGroup:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-RemoveUserFromGroup"
+          CodeUri: ./../../packages/removeuserfromgroup
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: Remove user from group in cognito userpool
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"         
+          Tags:
+            System: !Ref AWS::StackName
+      
+      LambdaDeleteUser:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-DeleteUser"
+          CodeUri: ./../../packages/deleteuser
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: Removes an user from cognito userpool
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                  - cognito-idp:AdminDeleteUser
+                Resource: "*"        
+          Tags:
+            System: !Ref AWS::StackName
+
+      LambdaGetUserMetadata:
+        Type: AWS::Serverless::Function
+        Properties:
+          FunctionName: !Sub "${StackRootName}-GetUserMetadata"
+          CodeUri: ./../../packages/getusermetadata
+          Environment:
+            Variables:
+              USER_POOL_ID: !Ref UserPoolId
+          Description: Get the user metadata from cognito userpool
+          Handler: index.handler
+          Runtime: nodejs12.x
+          Timeout: 10
+          MemorySize: 128
+          Policies:
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - cognito-idp:ListUsersInGroup
+                  - cognito-idp:GetUser
+                  - cognito-idp:ListGroups
+                  - cognito-idp:UpdateGroup
+                  - cognito-idp:AdminRemoveUserFromGroup
+                  - cognito-idp:AdminAddUserToGroup
+                  - cognito-idp:GetGroup
+                  - cognito-idp:UpdateUserPool
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:ListUsers
+                  - cognito-idp:AdminListGroupsForUser
+                Resource: "*"        
+          Tags:
+            System: !Ref AWS::StackName
+
+      #*##############################################
+      #* AWS::API::*
+      #*############################################## 
+              
+      DashboardApiGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+          Name: !Sub "${StackRootName}-api"
+          StageName: !Select [2, !Split ['-', !Ref AWS::StackName]]
+          DefinitionBody:
+            "Fn::Transform":
+              Name: "AWS::Include"
+              Parameters:
+                Location: !Sub "s3://${OpenApiBucket}/openapi.yaml"
+
+      ApiGatewayBasePathMapping:
+        Type: AWS::ApiGateway::BasePathMapping
+        Properties:
+            BasePath: !Select [3, !Split ['-', !Ref AWS::StackName]]
+            DomainName: !Sub "${ApiDomainName}"
+            RestApiId: !Ref DashboardApiGateway
+            Stage: !Ref DashboardApiGateway.Stage
+            
+      ApiKey:
+        Type: "AWS::ApiGateway::ApiKey"
+        DependsOn:
+            - DashboardApiGateway
+        Properties:
+            Name: !Sub ${StackRootName}-apikey
+            Description: Dashboards SES API Key
+            Enabled: "true"
+            StageKeys:
+                - RestApiId: !Ref DashboardApiGateway
+                  StageName: !Ref DashboardApiGateway.Stage
+
+      usagePlan:
+        Type: "AWS::ApiGateway::UsagePlan"
+        Properties:
+            ApiStages:
+                - ApiId: !Ref DashboardApiGateway
+                  Stage: !Ref DashboardApiGateway.Stage
+            Description: Dashboards SES usage plan
+            UsagePlanName: !Sub ${StackRootName}-usage-plan
+
+      usagePlanKey:
+        Type: 'AWS::ApiGateway::UsagePlanKey'
+        DependsOn:
+            - DashboardApiGateway
+            - ApiKey
+        Properties:
+            KeyId: !Ref ApiKey
+            KeyType: API_KEY
+            UsagePlanId: !Ref usagePlan
+
+  #!#########################################################################################
+  #! Outputs:
+  #!#########################################################################################
+    Outputs:
+      DashboardsApi:
+        Value: !Join
+          - ''
+          - - 'https://'
+            - !Ref DashboardApiGateway
+            - .execute-api.
+            - !Ref 'AWS::Region'
+            - .
+            - !Ref 'AWS::URLSuffix'
+            - /
+            - !Select [2, !Split ['-', !Ref AWS::StackName]]
+              

@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Soteria component stack
+Transform: AWS::Serverless-2016-10-31
+
+#!#########################################################################################
+#! Resources:
+#!#########################################################################################
+Resources:      
+  LambdaApiStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./api/api.yaml
+      Parameters:
+        StackRootName: !Ref AWS::StackName
+        CognitoUserPoolArn: !Sub
+        - 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${poolId}'
+        - poolId:
+            Fn::ImportValue:
+              !Join
+                  - '-'
+                  - - !Select [0, !Split ['-', !Ref AWS::StackName]]
+                    - !Select [1, !Split ['-', !Ref AWS::StackName]]
+                    - !Select [2, !Split ['-', !Ref AWS::StackName]]
+                    - 'identity-user-pool-id'
+        UserPoolId:
+          Fn::ImportValue:
+            !Join
+              - "-"
+              - - !Select [0, !Split ['-', !Ref AWS::StackName]]
+                - !Select [1, !Split ['-', !Ref AWS::StackName]]
+                - !Select [2, !Split ['-', !Ref AWS::StackName]]
+                - "identity-user-pool-id"
+        OpenApiBucket:
+          !Join
+            - "-"
+            - - !Select [0, !Split ['-', !Ref AWS::StackName]]
+              - !Select [1, !Split ['-', !Ref AWS::StackName]]
+              - !Select [2, !Split ['-', !Ref AWS::StackName]]
+              - "api-openapi/dashboards"
+        ApiDomainName:
+          Fn::ImportValue:
+            !Join
+              - "-"
+              - - !Select [0, !Split ['-', !Ref AWS::StackName]]
+                - !Select [1, !Split ['-', !Ref AWS::StackName]]
+                - !Select [2, !Split ['-', !Ref AWS::StackName]]
+                - "api-domainName"
+        DocumentBucketName:
+          !Join
+            - "-"
+            - - !Select [0, !Split ['-', !Ref AWS::StackName]]
+              - !Select [1, !Split ['-', !Ref AWS::StackName]]
+              - !Select [2, !Split ['-', !Ref AWS::StackName]]
+              - "distribution-origin"
+#Outputs:
+#  DashboardsApi:
+#    Value:
+#      Fn::GetAtt: [LambdaApiStack, Outputs.DashboardsApi]
+#    Export:
+#      Name: !Sub "${AWS::StackName}-api"

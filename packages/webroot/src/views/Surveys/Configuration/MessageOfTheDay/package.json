@@ -1,0 +1,6 @@
+{
+    "name": "MessageOfTheDay",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./messageOfTheDay.js"
+  }

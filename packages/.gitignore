@@ -1,0 +1,12 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/addusertogroup/node_modules
+/listusersingroup/node_modules
+/removeuserfromgroup/node_modules
+/listgroupforuser/node_modules
+/getusers/node_modules
+/getgroups/node_modules
+/getusermetadata/node_modules
+/deleteuser/node_modules
+/sendEmailAttachment/node_modules

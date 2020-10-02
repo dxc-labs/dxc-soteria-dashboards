@@ -1,0 +1,6 @@
+{
+  "name": "CheckPointConfigComp2",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ConfigComponent-2.js"
+}

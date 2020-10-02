@@ -1,0 +1,2043 @@
+openapi: 3.0.1
+info:
+  title: Soteria-Dashboard-APIs
+  version: 0.0.1
+# servers:
+# - url: https://xxx.execute-api.${AWS::Region}.amazonaws.com/{basePath}
+#   variables:
+#     basePath:
+#       default: /dev
+paths:
+  /updatefile:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateS3File.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+  
+  /addsestemplate:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaCreateMailTemplate.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+  
+  /sendtemplatemail:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaSendTemplateMail.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+  
+  /sendsesattachment:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaSendEmailAttachment.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /updatesestemplate:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaUpdateMailTemplate.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /getsestemplatedata:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaGetMailTemplateData.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: "when_no_templates"
+        httpMethod: POST
+        contentHandling: "CONVERT_TO_TEXT"
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: mock
+  
+  /getsestemplates:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaGetAllMailTemplates.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: "when_no_templates"
+        httpMethod: POST
+        contentHandling: "CONVERT_TO_TEXT"
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: mock
+
+# NEW API
+  /getgroups:
+    get:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaGetGroups.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /getusers:
+    get:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaGetUsers.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /listgroupsforuser:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaListGroupsForUser.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /listusersingroup:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaListUsersInGroup.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /addusertogroup:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaAddUserToGroup.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /removeuserfromgroup:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaRemoveUserFromGroup.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /getusermetadata:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaGetUserMetadata.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /deleteuser:
+    post:
+      responses:
+        401:
+          description: 401 response
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: 200 response
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - DashboardsAuth: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaDeleteUser.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+  /ext/sendtemplatemail:
+    post:
+      responses:
+        401:
+          description: "401 response"
+          headers:
+            X-Requested-With:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        200:
+          description: "200 response"
+          headers:
+            Referrer-Policy:
+              schema:
+                type: "string"
+            X-Frame-Options:
+              schema:
+                type: "string"
+            Strict-Transport-Security:
+              schema:
+                type: "string"
+            X-Requested-With:
+              schema:
+                type: "string"
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            X-Content-Type-Options:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Content-Security-Policy:
+              schema:
+                type: "string"
+            X-XSS-Protection:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::Sub: "${APIGatewayExecutionRole.Arn}"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaSendTemplateMail.Arn}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.X-Frame-Options: "'DENY'"
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-XSS-Protection: "'1; mode=block'"
+              method.response.header.Strict-Transport-Security: "'max-age=63072000;\
+                \ includeSubdomains; preload'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.X-Content-Type-Options: "'nosniff'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Referrer-Policy: "'same-origin'"
+              method.response.header.Content-Security-Policy: "'default-src 'none';\
+                \ img-src 'self'; script-src 'self'; style-src 'self'; object-src\
+                \ 'none''"
+          .*status.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.X-Requested-With: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Access-Control-Allow-Methods,x-requested-with,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.path('$.errorMessage')"
+        requestTemplates:
+          application/json: "{\"body\" : $input.json('$')}"
+        passthroughBehavior: when_no_templates
+        httpMethod: POST
+        contentHandling: CONVERT_TO_TEXT
+        type: aws
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
+
+components:
+  securitySchemes:
+    DashboardsAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "cognito_user_pools"
+      x-amazon-apigateway-authorizer:
+        providerARNs:
+          - Fn::Sub:
+             "${CognitoUserPoolArn}"
+        type: "cognito_user_pools"
+    api_key:
+      type: "apiKey"
+      name: "x-api-key"
+      in: "header"
